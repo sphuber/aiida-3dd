@@ -1,29 +1,26 @@
 # -*- coding: utf-8 -*-
-# yapf:disable
 """Command to launch the relax workflow."""
 import click
 
-from aiida.cmdline.params import options, types
+from aiida.cmdline.params import types
+from aiida.cmdline.params import options as options_core
 from aiida.cmdline.utils import echo
 
+from ..params import options
 from . import cmd_launch
 
 
 @cmd_launch.command('relax')
-@options.CODE(required=True, type=types.CodeParamType(entry_point='quantumespresso.pw'),
+@options_core.CODE(required=True, type=types.CodeParamType(entry_point='quantumespresso.pw'),
     default='pw-6.5.0-sirius-6.5.7-gnu@daint-gpu',
     help='Code for `pw.x`.')
-@click.option('--concurrent', type=click.INT, default=300, show_default=True,
-    help='Number of maximum concurrent work chains to submit.')
-@click.option('--interval', type=click.INT, default=600, show_default=True,
-    help='Number of seconds to sleep after a submit round.')
-@click.option('-M', '--max-atoms', type=click.INT, required=False,
-    help='Filter structures with at most this number of atoms.')
-@click.option('--skip-safety', is_flag=True,
-    help='Do not check for excepted and killed processes.')
-@options.DRY_RUN()
+@options.CONCURRENT(default=300)
+@options.INTERVAL(default=600)
+@options.MAX_ATOMS()
+@options.SKIP_SAFETY()
+@options_core.DRY_RUN()
+@options_core.PROFILE(type=types.ProfileParamType(load_profile=True))
 @click.pass_context
-@options.PROFILE(type=types.ProfileParamType(load_profile=True))
 def launch_relax(ctx, profile, code, concurrent, interval, max_atoms, skip_safety, dry_run):
     """Command to launch the relax workflow."""
     from datetime import datetime
@@ -46,7 +43,7 @@ def launch_relax(ctx, profile, code, concurrent, interval, max_atoms, skip_safet
     daemon = True
     sirius = True
     num_machines = 6
-    max_wallclock_seconds = 12 * 3600
+    max_wallclock_seconds = 24 * 3600
     max_memory_kb = 57042534
     num_mpiprocs_per_machine = 1
     num_cores_per_mpiproc = 12

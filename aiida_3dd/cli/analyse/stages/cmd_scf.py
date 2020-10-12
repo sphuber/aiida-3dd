@@ -1,22 +1,30 @@
 import click
 import tabulate
 
+from ...params import options
 from . import cmd_stages
 
 
 @cmd_stages.command('scf')
-def cmd_stage_scf():
+@options.MAX_ATOMS()
+def cmd_stage_scf(max_atoms):
     """Commands to analyse the scf stage of the project."""
     import collections
-
-    from aiida.orm import load_group, QueryBuilder, Group, CalcJobNode, WorkChainNode
+    from aiida.orm import load_group, QueryBuilder, Group, CalcJobNode, WorkChainNode, Data
 
     group = load_group('workchain/scf')
 
+    filters_structure = {}
+    filters_workchain = {'attributes.exit_status': 0}
+
+    if max_atoms is not None:
+        filters_structure['attributes.sites'] = {'shorter': max_atoms + 1}
+
     query = QueryBuilder()
     query.append(Group, filters={'id': group.pk}, tag='group')
-    query.append(WorkChainNode, with_group='group', filters={'attributes.exit_status': 0}, tag='scf', project='id')
+    query.append(WorkChainNode, with_group='group', filters=filters_workchain, tag='scf', project='id')
     query.append(CalcJobNode, with_incoming='scf', project='attributes.exit_status')
+    query.append(Data, with_outgoing='scf', edge_filters={'label': 'pw__structure'}, filters=filters_structure)
 
     mapping = collections.defaultdict(list)
 

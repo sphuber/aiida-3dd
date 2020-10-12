@@ -8,6 +8,7 @@ from .. import cmd_root
 
 from aiida.cmdline.params import arguments
 from aiida.cmdline.utils import echo
+from ..params import options
 
 EXTRA_NEW_MAGNETIC_KINDS = 'new_magnetic_kinds'
 EXTRA_INVALID_OCCUPATIONS = 'invalid_occupations'
@@ -20,10 +21,8 @@ def cmd_analyse():
 
 @cmd_analyse.command('completion')
 @arguments.GROUP()
-@click.option('-M', '--max-atoms', type=click.INT, required=False,
-    help='Filter structures with at most this number of atoms.')
-@click.option('-x', '--number-species', type=click.INT, required=False,
-    help='Filter structures with at most this number of species.')
+@options.MAX_ATOMS()
+@options.NUMBER_SPECIES()
 def cmd_stats(group, max_atoms, number_species):
     """Determine the completion rate of the various workchain groups."""
     from aiida import orm
@@ -43,10 +42,8 @@ def cmd_stats(group, max_atoms, number_species):
 
 
 @cmd_analyse.command('completion-relax')
-@click.option('-M', '--max-atoms', type=click.INT, required=False,
-    help='Filter structures with at most this number of atoms.')
-@click.option('-x', '--number-species', type=click.INT, required=False,
-    help='Filter structures with at most this number of species.')
+@options.MAX_ATOMS()
+@options.NUMBER_SPECIES()
 def cmd_completion_relax(max_atoms, number_species):
     """Determine the completion rate of the relax step."""
     from aiida import orm
@@ -120,10 +117,8 @@ def cmd_completion_relax(max_atoms, number_species):
 
 
 @cmd_analyse.command('completion-scf')
-@click.option('-M', '--max-atoms', type=click.INT, required=False,
-    help='Filter structures with at most this number of atoms.')
-@click.option('-x', '--number-species', type=click.INT, required=False,
-    help='Filter structures with at most this number of species.')
+@options.MAX_ATOMS()
+@options.NUMBER_SPECIES()
 def cmd_completion_scf(max_atoms, number_species):
     """Determine the completion rate of the reconnaissance SCF step."""
     from aiida import orm

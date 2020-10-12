@@ -1,29 +1,26 @@
 # -*- coding: utf-8 -*-
-# yapf:disable
 """Command to launch the reconnaissance SCF workflow."""
 import click
 
-from aiida.cmdline.params import options, types
+from aiida.cmdline.params import types
+from aiida.cmdline.params import options as options_core
 from aiida.cmdline.utils import echo
 
+from ..params import options
 from . import cmd_launch
 
 
 @cmd_launch.command('scf')
-@options.CODE(type=types.CodeParamType(entry_point='quantumespresso.pw'),
+@options_core.CODE(type=types.CodeParamType(entry_point='quantumespresso.pw'),
     default='pw-6.5.0-sirius-6.5.7-gnu@daint-gpu', show_default=True,
     help='Code for `pw.x`.')
-@click.option('--concurrent', type=click.INT, default=500, show_default=True,
-    help='Number of maximum concurrent work chains to submit.')
-@click.option('--interval', type=click.INT, default=30, show_default=True,
-    help='Number of seconds to sleep after a submit round.')
-@click.option('-M', '--max-atoms', type=click.INT, required=False,
-    help='Filter structures with at most this number of atoms.')
-@click.option('--skip-safety', is_flag=True,
-    help='Do not check for excepted and killed processes.')
-@options.DRY_RUN()
+@options.CONCURRENT(default=500)
+@options.INTERVAL(default=30)
+@options.MAX_ATOMS()
+@options.SKIP_SAFETY()
+@options_core.DRY_RUN()
+@options_core.PROFILE(type=types.ProfileParamType(load_profile=True))
 @click.pass_context
-@options.PROFILE(type=types.ProfileParamType(load_profile=True))
 def launch_scf(ctx, profile, code, concurrent, interval, max_atoms, skip_safety, dry_run):
     """Command to launch the reconnaissance SCF workflow."""
     from datetime import datetime
@@ -45,7 +42,7 @@ def launch_scf(ctx, profile, code, concurrent, interval, max_atoms, skip_safety,
     dry_run = False
     daemon = True
     sirius = True
-    num_machines = 2
+    num_machines = 4
     max_wallclock_seconds = 12 * 3600
     max_memory_kb = 57042534
     num_mpiprocs_per_machine = 1
