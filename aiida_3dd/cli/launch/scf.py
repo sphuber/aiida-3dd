@@ -17,12 +17,14 @@ from . import cmd_launch
     help='Number of maximum concurrent work chains to submit.')
 @click.option('--interval', type=click.INT, default=30, show_default=True,
     help='Number of seconds to sleep after a submit round.')
+@click.option('-M', '--max-atoms', type=click.INT, required=False,
+    help='Filter structures with at most this number of atoms.')
 @click.option('--skip-safety', is_flag=True,
     help='Do not check for excepted and killed processes.')
 @options.DRY_RUN()
 @click.pass_context
 @options.PROFILE(type=types.ProfileParamType(load_profile=True))
-def launch_scf(ctx, profile, code, concurrent, interval, skip_safety, dry_run):
+def launch_scf(ctx, profile, code, concurrent, interval, max_atoms, skip_safety, dry_run):
     """Command to launch the reconnaissance SCF workflow."""
     from datetime import datetime
     from time import sleep
@@ -35,7 +37,6 @@ def launch_scf(ctx, profile, code, concurrent, interval, skip_safety, dry_run):
     group_workchain = orm.Group.get(label='workchain/scf')
     node = None
     max_entries = None
-    max_atoms = 48
     number_species = None
     skip_check = False
     clean_workdir = True
