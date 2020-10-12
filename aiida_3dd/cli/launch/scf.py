@@ -11,9 +11,12 @@ from . import cmd_launch
 
 
 @cmd_launch.command('scf')
-@options_core.CODE(type=types.CodeParamType(entry_point='quantumespresso.pw'),
-    default='pw-6.5.0-sirius-6.5.7-gnu@daint-gpu', show_default=True,
-    help='Code for `pw.x`.')
+@options_core.CODE(
+    type=types.CodeParamType(entry_point='quantumespresso.pw'),
+    default='pw-6.5.0-sirius-6.5.7-gnu@daint-gpu',
+    show_default=True,
+    help='Code for `pw.x`.'
+)
 @options.CONCURRENT(default=500)
 @options.INTERVAL(default=30)
 @options.MAX_ATOMS()
@@ -48,14 +51,14 @@ def launch_scf(ctx, profile, code, concurrent, interval, max_atoms, skip_safety,
     num_mpiprocs_per_machine = 1
     num_cores_per_mpiproc = 12
 
-    while(True):
+    while True:
 
         if not skip_safety:
             filters = {'attributes.process_state': {'or': [{'==': 'excepted'}, {'==': 'killed'}]}}
             builder = orm.QueryBuilder().append(orm.ProcessNode, filters=filters)
 
             if builder.count() > 0:
-                echo.echo_critical('found {} excepted or killed processes, exiting'.format(builder.count()))
+                echo.echo_critical(f'found {builder.count()} excepted or killed processes, exiting')
 
         filters = {'attributes.process_state': {'or': [{'==': 'waiting'}, {'==': 'running'}, {'==': 'created'}]}}
 
@@ -67,7 +70,7 @@ def launch_scf(ctx, profile, code, concurrent, interval, max_atoms, skip_safety,
         max_entries = concurrent - current
 
         if current < concurrent:
-            echo.echo('{} | currently {} running workchains, submitting {} more'.format(now(), current, max_entries))
+            echo.echo(f'{now()} | currently {current} running workchains, submitting {max_entries} more')
 
             inputs = {
                 'profile': profile,
@@ -93,7 +96,7 @@ def launch_scf(ctx, profile, code, concurrent, interval, max_atoms, skip_safety,
             }
             ctx.invoke(launch_workchain, **inputs)
         else:
-            echo.echo('{} | currently {} running workchains, nothing to submit'.format(now(), current))
+            echo.echo(f'{now()} | currently {current} running workchains, nothing to submit')
 
-        echo.echo('{} | sleeping {} seconds'.format(now(), interval))
+        echo.echo(f'{now()} | sleeping {interval} seconds')
         sleep(interval)

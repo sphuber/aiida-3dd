@@ -15,5 +15,6 @@ click_completion.init()
 def cmd_root(profile):  # pylint: disable=unused-argument
     """CLI for the 3DD project."""
 
+
 from .analyse import *
 from .launch import *

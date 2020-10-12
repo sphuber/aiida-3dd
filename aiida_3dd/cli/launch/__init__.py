@@ -6,7 +6,7 @@ from .. import cmd_root
 
 @cmd_root.group('launch')
 def cmd_launch():
-    """Commands to launch the various workflow steps of the project.
+    r"""Commands to launch the various workflow steps of the project.
 
     The workflow consistes of the following steps, in this order:
 

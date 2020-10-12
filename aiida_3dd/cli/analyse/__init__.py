@@ -88,10 +88,11 @@ def cmd_completion_relax(max_atoms, number_species):
     filters_scf = {
         'attributes.exit_status': 0,
         'extras': {
-            'and': [
-                {'!has_key': EXTRA_NEW_MAGNETIC_KINDS},
-                {'!has_key': EXTRA_INVALID_OCCUPATIONS}
-            ]
+            'and': [{
+                '!has_key': EXTRA_NEW_MAGNETIC_KINDS
+            }, {
+                '!has_key': EXTRA_INVALID_OCCUPATIONS
+            }]
         }
     }
 
@@ -159,14 +160,10 @@ def cmd_completion_scf(max_atoms, number_species):
 
     submitted = set(submitted)
 
-    table = [
-        ['Structures', nstructures],
-        ['Submitted', len(submitted)],
-        ['Submitted success', len(success)],
-        ['Submitted failed', len(failed)],
-        ['Submitted active', len(active)],
-        ['Submittable', nstructures - len(submitted)]
-    ]
+    table = [['Structures', nstructures], ['Submitted', len(submitted)], ['Submitted success',
+                                                                          len(success)],
+             ['Submitted failed', len(failed)], ['Submitted active', len(active)],
+             ['Submittable', nstructures - len(submitted)]]
 
     click.echo(tabulate.tabulate(table, tablefmt='plain'))
 
@@ -176,9 +173,7 @@ def cmd_unsubmittable():
     """Determine the completion rate of the various workchain groups."""
     from aiida import orm
 
-    filters = {
-        'or': [{'extras.{}'.format(EXTRA_NEW_MAGNETIC_KINDS): True}, {'extras.{}'.format(EXTRA_INVALID_OCCUPATIONS): True}]
-    }
+    filters = {'or': [{f'extras.{EXTRA_NEW_MAGNETIC_KINDS}': True}, {f'extras.{EXTRA_INVALID_OCCUPATIONS}': True}]}
 
     query = orm.QueryBuilder()
     query.append(orm.Group, filters={'label': 'workchain/scf'}, tag='group')
@@ -202,7 +197,7 @@ def cmd_validation(group):
     if len(set(uuids)) != len(uuids):
         echo.echo_critical('there are duplicate structures!')
     else:
-        echo.echo_success('all good on the western front: found {} structures'.format(len(uuids)))
+        echo.echo_success(f'all good on the western front: found {len(uuids)} structures')
 
 
 from .stages import cmd_stages

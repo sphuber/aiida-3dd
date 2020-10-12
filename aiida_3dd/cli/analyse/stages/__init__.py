@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+"""CLI commands to analyse the results of the various project stages."""
 from .. import cmd_analyse
 
 

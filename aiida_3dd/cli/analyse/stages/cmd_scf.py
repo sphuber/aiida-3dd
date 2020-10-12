@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+"""CLI command to analyse the results of the scf stage."""
 import click
 import tabulate
 

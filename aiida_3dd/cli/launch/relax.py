@@ -11,9 +11,12 @@ from . import cmd_launch
 
 
 @cmd_launch.command('relax')
-@options_core.CODE(required=True, type=types.CodeParamType(entry_point='quantumespresso.pw'),
+@options_core.CODE(
+    required=True,
+    type=types.CodeParamType(entry_point='quantumespresso.pw'),
     default='pw-6.5.0-sirius-6.5.7-gnu@daint-gpu',
-    help='Code for `pw.x`.')
+    help='Code for `pw.x`.'
+)
 @options.CONCURRENT(default=300)
 @options.INTERVAL(default=600)
 @options.MAX_ATOMS()
@@ -49,14 +52,14 @@ def launch_relax(ctx, profile, code, concurrent, interval, max_atoms, skip_safet
     num_cores_per_mpiproc = 12
     verbose = True
 
-    while(True):
+    while True:
 
         if not skip_safety:
             filters = {'attributes.process_state': {'or': [{'==': 'excepted'}, {'==': 'killed'}]}}
             builder = orm.QueryBuilder().append(orm.ProcessNode, filters=filters)
 
             if builder.count() > 0:
-                echo.echo_critical('found {} excepted or killed processes, exiting'.format(builder.count()))
+                echo.echo_critical(f'found {builder.count()} excepted or killed processes, exiting')
 
         filters = {'attributes.process_state': {'or': [{'==': 'waiting'}, {'==': 'running'}, {'==': 'created'}]}}
 
@@ -68,7 +71,7 @@ def launch_relax(ctx, profile, code, concurrent, interval, max_atoms, skip_safet
         max_entries = concurrent - current
 
         if current < concurrent:
-            echo.echo('{} | currently {} running workchains, submitting {} more'.format(now(), current, max_entries))
+            echo.echo(f'{now()} | currently {current} running workchains, submitting {max_entries} more')
 
             inputs = {
                 'profile': profile,
@@ -95,7 +98,7 @@ def launch_relax(ctx, profile, code, concurrent, interval, max_atoms, skip_safet
             }
             ctx.invoke(launch_workchain, **inputs)
         else:
-            echo.echo('{} | currently {} running workchains, nothing to submit'.format(now(), current))
+            echo.echo(f'{now()} | currently {current} running workchains, nothing to submit')
 
-        echo.echo('{} | sleeping {} seconds'.format(now(), interval))
+        echo.echo(f'{now()} | sleeping {interval} seconds')
         sleep(interval)
