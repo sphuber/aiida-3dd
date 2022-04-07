@@ -3,8 +3,8 @@
 import click
 import tabulate
 
-from ...params import options
 from . import cmd_completion
+from ...params import options
 
 EXTRA_NEW_MAGNETIC_KINDS = 'new_magnetic_kinds'
 EXTRA_INVALID_OCCUPATIONS = 'invalid_occupations'

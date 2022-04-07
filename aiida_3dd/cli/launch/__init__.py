@@ -17,6 +17,6 @@ def cmd_launch():
     """
 
 
+from .relax import launch_relax
 # Import the sub commands to register them with the CLI
 from .scf import launch_scf
-from .relax import launch_relax

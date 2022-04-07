@@ -65,7 +65,7 @@ ignore = [
 ]
 
 [tool.pylint.basic]
-good-names = []
+good-names = ['pk']
 
 [tool.pylint.master]
 load-plugins = ['pylint_aiida']

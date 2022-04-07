@@ -3,8 +3,8 @@
 import click
 import tabulate
 
-from ...params import options
 from . import cmd_stages
+from ...params import options
 
 
 @cmd_stages.command('scf')
@@ -12,7 +12,8 @@ from . import cmd_stages
 def cmd_stage_scf(max_atoms):
     """Commands to analyse the scf stage of the project."""
     import collections
-    from aiida.orm import load_group, QueryBuilder, Group, CalcJobNode, WorkChainNode, Data
+
+    from aiida.orm import CalcJobNode, Data, Group, QueryBuilder, WorkChainNode, load_group
 
     group = load_group('workchain/scf')
 

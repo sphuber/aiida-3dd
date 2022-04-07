@@ -2,10 +2,10 @@
 # pylint: disable=cyclic-import,unused-import,wrong-import-position
 """Module with CLI commands for various analyses."""
 
-from .. import cmd_root
-
 from aiida.cmdline.params import arguments
 from aiida.cmdline.utils import echo
+
+from .. import cmd_root
 
 
 @cmd_root.group('analyse')

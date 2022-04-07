@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 """Command to launch the reconnaissance SCF workflow."""
+from aiida.cmdline.params import options as options_core
+from aiida.cmdline.params import types
+from aiida.cmdline.utils import echo
 import click
 
-from aiida.cmdline.params import types
-from aiida.cmdline.params import options as options_core
-from aiida.cmdline.utils import echo
-
-from ..params import options
 from . import cmd_launch
+from ..params import options
 
 
 @cmd_launch.command('scf')
@@ -28,8 +27,9 @@ def launch_scf(ctx, profile, code, concurrent, interval, max_atoms, skip_safety,
     """Command to launch the reconnaissance SCF workflow."""
     from datetime import datetime
     from time import sleep
+
     from aiida import orm
-    from aiida_quantumespresso_epfl.cli.bulk.pw.base import launch as launch_workchain
+    from aiida_quantumespresso_epfl.cli.bulk.pw.base import launch as launch_workchain  # pylint: disable=import-error
 
     now = datetime.utcnow().isoformat
 

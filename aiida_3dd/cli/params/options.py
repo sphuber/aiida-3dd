@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """Predefined reusable options for the CLI."""
-import click
-
 from aiida.cmdline.params.options import OverridableOption
+import click
 
 __all__ = ('MAX_ATOMS', 'SKIP_SAFETY', 'CONCURRENT', 'INTERVAL')
 

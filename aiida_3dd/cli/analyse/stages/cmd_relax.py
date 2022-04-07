@@ -3,8 +3,8 @@
 import click
 import tabulate
 
-from ...params import options
 from . import cmd_stages
+from ...params import options
 
 
 @cmd_stages.command('relax')
@@ -13,7 +13,8 @@ from . import cmd_stages
 def cmd_stage_relax(details, max_atoms):
     """Commands to analyse the relax stage of the project."""
     import collections
-    from aiida.orm import load_group, QueryBuilder, Group, WorkChainNode, Data
+
+    from aiida.orm import Data, Group, QueryBuilder, WorkChainNode, load_group
 
     group = load_group('workchain/relax')
 

@@ -3,8 +3,8 @@
 import click
 import tabulate
 
-from ...params import options
 from . import cmd_completion
+from ...params import options
 
 
 @cmd_completion.command('scf')
