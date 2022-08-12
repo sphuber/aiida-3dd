@@ -33,4 +33,5 @@ def cmd_validation(group):
 
 
 from .completion import cmd_completion
+from .results import cmd_results
 from .stages import cmd_stages
