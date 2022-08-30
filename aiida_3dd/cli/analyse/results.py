@@ -24,10 +24,18 @@ def cmd_volume_change(group, limit, output_file):
     """Analyze the change in cell volume of a structure after the ``PwRelaxWorkChain``."""
     from aiida import orm
 
+    filters_structure = {
+            'extras': {'and': [
+                {'!has_key': 'incorrect_formula'},
+                {'!has_key': 'high_pressure'},
+                {'!has_key': 'predicted'},
+            ]}
+    }
+
     query = orm.QueryBuilder()
     query.append(orm.Group, filters={'label': group.label}, tag='group')
     query.append(orm.Node, with_group='group', tag='wc', filters={'attributes.exit_status': 0})
-    query.append(orm.StructureData, with_outgoing='wc', project='*')
+    query.append(orm.StructureData, with_outgoing='wc', project='*', filters=filters_structure)
     query.append(orm.StructureData, with_incoming='wc', project='*')
 
     if limit:

@@ -38,7 +38,13 @@ def cmd_stage_relax(details, max_atoms):
 
         counts = []
 
-        for called in mapping.values():
+        for relax, called in mapping.items():
+
+            # There are some workchains that ran with ``final_scf = False`` that should be excluded as they are not part
+            # of the original series.
+            if len(called) < 3:
+                continue
+
             counts.append(len(called))
 
         table = []
@@ -46,12 +52,11 @@ def cmd_stage_relax(details, max_atoms):
         total = sum(counter.values())
         cumulative = 0
 
-        for iterations, count in sorted(counter.items(), key=lambda item: item[1], reverse=True):
+        for iterations, count in sorted(counter.items(), key=lambda item: item[0], reverse=False):
             percentage = (count / total) * 100
             cumulative += percentage
             table.append((count, percentage, cumulative, iterations))
 
         click.echo(tabulate.tabulate(table, headers=['Count', 'Percentage', 'Cumulative', 'Iterations']))
-
     else:
         print('test')

@@ -17,13 +17,13 @@ def cmd_completion_relax(max_atoms, number_species):
     """Determine the completion rate of the relax step."""
     from aiida import orm
 
-    filters_structure = {}
+    filters_structure = {'and': []}
 
     if max_atoms is not None:
-        filters_structure['attributes.sites'] = {'shorter': max_atoms + 1}
+        filters_structure['and'].append({'attributes.sites': {'shorter': max_atoms + 1}})
 
     if number_species is not None:
-        filters_structure['attributes.kinds'] = {'of_length': number_species}
+        filters_structure['and'].append({'attributes.kinds': {'of_length': number_species}})
 
     query = orm.QueryBuilder()
     query.append(orm.Group, filters={'label': 'structure/unique'}, tag='group')
@@ -53,16 +53,16 @@ def cmd_completion_relax(max_atoms, number_species):
 
     submitted = set(submitted)
 
-    filters_structure['id'] = {'!in': submitted}
+    filters_structure['and'].append({'id': {'!in': submitted}})
     filters_scf = {
-        'attributes.exit_status': 0,
-        'extras': {
-            'and': [{
-                '!has_key': EXTRA_NEW_MAGNETIC_KINDS
-            }, {
-                '!has_key': EXTRA_INVALID_OCCUPATIONS
-            }]
-        }
+        # 'attributes.exit_status': 0,
+        # 'extras': {
+        #     'and': [{
+        #         '!has_key': EXTRA_NEW_MAGNETIC_KINDS
+        #     }, {
+        #         '!has_key': EXTRA_INVALID_OCCUPATIONS
+        #     }]
+        # }
     }
 
     query = orm.QueryBuilder()
